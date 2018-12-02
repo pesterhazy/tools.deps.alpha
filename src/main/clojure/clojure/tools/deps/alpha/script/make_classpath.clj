@@ -76,7 +76,9 @@
         (when (.exists jf)
           (.delete jf))))
     (if-let [main-opts (seq (get (deps/combine-aliases deps-map (concat aliases main-aliases)) :main-opts))]
-      (io/write-file main-file (str/join " " main-opts))
+      (io/write-file main-file (str/join " " (map (fn [s]
+                                                    (str/replace s #"(.)" "\\\\$1"))
+                                                  main-opts)))
       (let [mf (jio/file main-file)]
         (when (.exists mf)
           (.delete mf))))))
